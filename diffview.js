@@ -55,7 +55,7 @@ var diffview = {
 		var contextSize = params.contextSize;
 		var inline = (params.viewType == 0 || params.viewType == 1) ? params.viewType : 0;
 		var invertSides = (params.invertSides == 0 || params.invertSides == 1) ? params.invertSides : 0;
-
+	
 		if (baseTextLines == null)
 			throw "Cannot build diff view; baseTextLines is not defined.";
 		if (newTextLines == null)
@@ -126,15 +126,9 @@ var diffview = {
 			}
 		}
 		
-		function addCellsInline (row, tidx, tidx2, textLines, change, invertSides) {
- 			if(invertSides) {
-				row.appendChild(telt("th", tidx2 == null ? "" : (tidx2 + 1).toString()));
- 				row.appendChild(telt("th", tidx == null ? "" : (tidx + 1).toString()));
- 			}
- 			else {
- 				row.appendChild(telt("th", tidx == null ? "" : (tidx + 1).toString()));
- 				row.appendChild(telt("th", tidx2 == null ? "" : (tidx2 + 1).toString()));
- 			}
+		function addCellsInline (row, tidx, tidx2, textLines, change) {
+			row.appendChild(telt("th", tidx == null ? "" : (tidx + 1).toString()));
+			row.appendChild(telt("th", tidx2 == null ? "" : (tidx2 + 1).toString()));		
 			row.appendChild(ctelt("td", change, textLines[tidx != null ? tidx : tidx2].replace(/\t/g, "\u00a0\u00a0\u00a0\u00a0")));
 		}
 		
@@ -175,16 +169,21 @@ var diffview = {
 				toprows.push(node = document.createElement("tr"));
 				if (inline) {
 					if (change == "insert") {
-						addCellsInline(node, null, n++, newTextLines, change, invertSides);
+						addCellsInline(node, null, n++, newTextLines, change);
 					} else if (change == "replace") {
 						botrows.push(node2 = document.createElement("tr"));
-						if (b < be) addCellsInline(node, b++, null, baseTextLines, "delete", invertSides);
- 						if (n < ne) addCellsInline(node2, null, n++, newTextLines, "insert", invertSides);
+						if(invertSides){
+                            if (n < ne) addCellsInline(node2, n++, null, newTextLines, "delete");
+                            if (b < be) addCellsInline(node, null, b++, baseTextLines, "insert");
+						}else{
+                            if (n < ne) addCellsInline(node, n++, null, newTextLines, "delete");
+                            if (b < be) addCellsInline(node2, null, b++, baseTextLines, "insert");
+						}
 					} else if (change == "delete") {
-						addCellsInline(node, b++, null, baseTextLines, change, invertSides);
+						addCellsInline(node, b++, null, baseTextLines, change);
 					} else {
 						// equal
-						addCellsInline(node, b++, n++, baseTextLines, change, invertSides);
+						addCellsInline(node, b++, n++, baseTextLines, change);
 					}
 				} else {
 					if(invertSides) {
