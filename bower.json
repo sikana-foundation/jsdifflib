@@ -1,0 +1,13 @@
+{
+  "name": "jsdifflib",
+  "homepage": "https://github.com/sikana-foundation/jsdifflib",
+  "_release": "d8e6bf76a5",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "d8e6bf76a5e82fd6fb3318e5a434aa543c23046f"
+  },
+  "_source": "git://github.com/sikana-foundation/jsdifflib.git",
+  "_target": "*",
+  "_originalSource": "sikana-foundation/jsdifflib"
+}
